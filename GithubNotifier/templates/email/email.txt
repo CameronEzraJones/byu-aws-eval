@@ -1,0 +1,5 @@
+Hello {{ login_name }}
+
+It appears you don't have a name associated with your GitHub profile. Please go to https://github.com/settings/profile to set it
+
+Thanks!

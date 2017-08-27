@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <div class="jumbotron">
+        <h1 class="display-3">Github Notifier</h1>
+        <p class="lead">Solution for the BYU Software Engineer - AWS Position Technical Evaluation</p>
+        <hr class="my-4">
+        <p>Please enter the name of a GitHub organization</p>
+        <form action="/" method="get">
+            {{ form }}
+            <button type="submit" class="btn btn-primary">Search</button>
+        </form>
+    </div>
+{% endblock %}

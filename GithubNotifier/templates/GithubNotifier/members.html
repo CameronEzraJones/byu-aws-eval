@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <h1>{{ organization }} members</h1>
+    <div class="row col">
+        <div class="btn-group">
+            <form action="/email" method="post">{% csrf_token %}
+                <input type="hidden" name="nameless_members" value="{{ nameless_members }}">
+                <button type="submit" class="btn btn-danger">Email members without names</button>
+            </form>
+            <form action="/save" method="post">{% csrf_token %}
+                <input type="hidden" name="nameless_members" value="{{ nameless_members }}">
+                <input type="hidden" name="organization" value="{{ organization }}">
+                <button type="submit" class="btn btn-warning">Save nameless members in AWS</button>
+            </form>
+        </div>
+    </div>
+    <ul class="list-group">
+        {% for member in org_members %}
+        <li class="list-group-item {% if member.name is None %}list-group-item-danger{% endif %}">
+            <img src="{{ member.avatar_url }}" alt="{{ member.login }}" class="img-thumbnail float-left" width="100px" height="100px">
+            <p>Login: {{ member.login }}</p>
+            <p>Name: {{ member.name }}</p>
+            <p>Email: {{ member.email }}</p>
+        </li>
+        {% endfor %}
+    </ul>
+{% endblock %}

@@ -17,12 +17,13 @@
     </div>
     <ul class="list-group">
         {% for member in org_members %}
-        <li class="list-group-item {% if member.name is None %}list-group-item-danger{% endif %}">
-            <img src="{{ member.avatar_url }}" alt="{{ member.login }}" class="img-thumbnail float-left" width="100px" height="100px">
-            <p>Login: {{ member.login }}</p>
-            <p>Name: {{ member.name }}</p>
-            <p>Email: {{ member.email }}</p>
-        </li>
+            <li class="list-group-item {% if member.name is None %}list-group-item-danger{% endif %}">
+                <img src="{{ member.avatar_url }}" alt="{{ member.login }}" class="img-thumbnail float-left"
+                     width="100px" height="100px">
+                <p>Login: {{ member.login }}</p>
+                <p>Name: {{ member.name }}</p>
+                <p>Email: {{ member.email }}</p>
+            </li>
         {% endfor %}
     </ul>
 {% endblock %}

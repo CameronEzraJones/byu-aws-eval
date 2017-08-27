@@ -1,11 +1,10 @@
 import json
-import re
 import os
+import re
 import time
 import urllib.request
 
 import boto3
-
 from django.conf import settings
 from django.core.mail import send_mail
 from django.http import Http404, HttpResponse
@@ -22,8 +21,8 @@ def send_emails_to_nameless_members(request):
     for member in members:
         msg_plain = render_to_string('email/email.txt', {'login_name': member['login']})
         msg_html = render_to_string('email/email.html', {'login_name': member['login']})
-        send_mail('Please update your GitHub name', msg_plain, 'cejones@example.com',
-                  [member['email'] or 'cejones90@gmail.com'], fail_silently=False,
+        send_mail('Please update your GitHub name', msg_plain, 'cjones@example.com',
+                  [member['email'] or 'no-email-given@gmail.com'], fail_silently=False,
                   html_message=msg_html)
     return HttpResponse(status=204)
     pass
@@ -45,16 +44,16 @@ def save_nameless_members_to_aws(request):
 
 
 def index(request):
-    organization = request.GET.get("organization")
+    organization = request.GET.get('organization')
     if organization:
-        return redirect("members/{0}".format(organization))
+        return redirect('members/{0}'.format(organization))
     form = GitHubOrganizationSearchForm()
-    return render(request, "GithubNotifier/index.html", {"form": form})
+    return render(request, 'GithubNotifier/index.html', {'form': form})
 
 
 def get_member_name_and_email(member):
     github_api_host = settings.GITHUB_API_HOST
-    github_user_path = "/users/{0}".format(member["login"])
+    github_user_path = '/users/{0}'.format(member['login'])
     github_url = github_api_host + github_user_path
     headers = settings.GITHUB_API_HEADERS
     try:
@@ -62,25 +61,25 @@ def get_member_name_and_email(member):
         with urllib.request.urlopen(github_request) as f:
             contents = f.read().decode('utf-8')
             user_details = json.loads(contents)
-            return user_details["name"], user_details["email"]
+            return user_details['name'], user_details['email']
     except:
         return None, None
     pass
 
 
 def get_next_url(headers):
-    if "Link" in headers:
-        links = headers["Link"].split(', ')
+    if 'Link' in headers:
+        links = headers['Link'].split(', ')
         for link in links:
             link_info = link.split('; ')
-            if re.search("rel=\"(.*)\"", link_info[1])[1] == "next":
-                return re.search("<(.*)>", link_info[0])[1]
+            if re.search('rel="(.*)"', link_info[1])[1] == 'next':
+                return re.search('<(.*)>', link_info[0])[1]
     return None
 
 
 def members(request, organization):
     github_api_host = settings.GITHUB_API_HOST
-    github_org_members_path = "/orgs/{0}/members"
+    github_org_members_path = '/orgs/{0}/members'
     github_url = github_api_host + github_org_members_path.format(organization)
     members = []
     nameless_members = []
@@ -92,12 +91,13 @@ def members(request, organization):
                 contents = f.read().decode('utf-8')
                 members_retrieved = json.loads(contents)
                 for member in members_retrieved:
-                    member["name"], member["email"] = get_member_name_and_email(member)
-                    if member["name"] is None:
+                    member['name'], member['email'] = get_member_name_and_email(member)
+                    if member['name'] is None:
                         nameless_members.append(member)
                     members.append(member)
             github_url = get_next_url(f.info())
     except:
-        raise Http404("Organization {0} does not exist".format(organization))
-    return render(request, "GithubNotifier/members.html",
-                  {"organization": organization, 'org_members': members, 'nameless_members': json.dumps(nameless_members)})
+        raise Http404('Organization {0} does not exist'.format(organization))
+    return render(request, 'GithubNotifier/members.html',
+                  {'organization': organization, 'org_members': members,
+                   'nameless_members': json.dumps(nameless_members)})

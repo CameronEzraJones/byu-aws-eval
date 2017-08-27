@@ -102,7 +102,7 @@ You can enter the name of an organization in the search bar. If no such organiza
 If the organization exists, you will be redirected to a list of the members of the organization with the following details:
 
 * Avatar
-* Login
+* Username / Login
 * Name
 * Email
 

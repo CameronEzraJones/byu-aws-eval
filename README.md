@@ -73,6 +73,11 @@ BYU Software Engineer - AWS Position Technical Evaluation by Cameron Jones
     
         \path\to\env\Scripts\activate
     for Windows
+    
+* Install `django` and `boto3` packages
+
+        pip install django
+        pip install boto3
 
     
     
